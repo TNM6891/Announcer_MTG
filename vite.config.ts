@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const apiKey = env.GEMINI_API_KEY || null;
 
   return {
+    base: '/Announcer_MTG/', // GitHub Pages subdirectory
     build: {
       outDir: 'docs', // GitHub Pages uses /docs folder
     },
