@@ -18,9 +18,9 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react()],
     define: {
-      // API key can be set via localStorage at runtime or via env variable at build time
-      'process.env.API_KEY': `(localStorage.getItem('gemini_api_key') || ${JSON.stringify(apiKey)})`,
-      'process.env.GEMINI_API_KEY': `(localStorage.getItem('gemini_api_key') || ${JSON.stringify(apiKey)})`
+      // API key will be checked at runtime from localStorage or can be set at build time
+      'process.env.API_KEY': JSON.stringify(apiKey),
+      'process.env.GEMINI_API_KEY': JSON.stringify(apiKey)
     },
     resolve: {
       alias: {

@@ -380,12 +380,14 @@ export const useLiveSession = (videoRefs: React.MutableRefObject<HTMLVideoElemen
 
     const connect = useCallback(async () => {
         try {
-            // Check if API key is configured
-            if (!process.env.API_KEY) {
+            // Check localStorage first, then fall back to environment variable
+            const apiKey = localStorage.getItem('gemini_api_key') || process.env.API_KEY;
+
+            if (!apiKey) {
                 throw new Error("AI features require a Gemini API key. Configure it in Settings to enable the Announcer.");
             }
 
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const ai = new GoogleGenAI({ apiKey: apiKey });
             const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
             const outputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
 

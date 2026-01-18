@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    
-    <!-- PWA Meta Tags -->
-    <meta name="description" content="AI-powered Magic: The Gathering game announcer and tracker. Works offline as a PWA on any device." />
-    <meta name="theme-color" content="#09090b" />
-    
-    <!-- iOS PWA Support -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="MTG Announcer">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3062/3062835.png">
-    
-    <!-- Android PWA Support -->
-    <meta name="mobile-web-app-capable" content="yes">
-    
-    <title>MTG Announcer - AI Game Tracker</title>
-    
-    <link rel="manifest" href="/Announcer_MTG/assets/manifest-Dq33unqF.json">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-      /* Custom scrollbar for a sleek gaming look */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #18181b; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #3f3f46; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #52525b; 
-      }
-      .animate-pulse-slow {
-        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-    </style>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- PWA Meta Tags -->
+  <meta name="description"
+    content="AI-powered Magic: The Gathering game announcer and tracker. Works offline as a PWA on any device." />
+  <meta name="theme-color" content="#09090b" />
+
+  <!-- iOS PWA Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MTG Announcer">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3062/3062835.png">
+
+  <!-- Android PWA Support -->
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <title>MTG Announcer - AI Game Tracker</title>
+
+  <link rel="manifest" href="/Announcer_MTG/assets/manifest-Dq33unqF.json">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Custom scrollbar for a sleek gaming look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #18181b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #52525b;
+    }
+
+    .animate-pulse-slow {
+      animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+
   <script type="importmap">
 {
   "imports": {
@@ -55,8 +62,11 @@
   }
 }
 </script>
+  <script type="module" crossorigin src="/Announcer_MTG/assets/index-CS-husMn.js"></script>
 </head>
-  <body class="bg-zinc-950 text-zinc-100 overflow-hidden select-none">
-    <div id="root"></div>
-  </body>
+
+<body class="bg-zinc-950 text-zinc-100 overflow-hidden select-none">
+  <div id="root"></div>
+</body>
+
 </html>
