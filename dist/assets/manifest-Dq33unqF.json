@@ -1,0 +1,36 @@
+{
+  "short_name": "MTG Announcer",
+  "name": "Magic: The Gathering AI Announcer & Game Tracker",
+  "description": "Track your MTG games with AI-powered commentary. Works offline. Install on any device.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3062/3062835.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3062/3062835.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3062/3062835.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#09090b",
+  "background_color": "#09090b",
+  "orientation": "any",
+  "scope": "/",
+  "categories": [
+    "games",
+    "entertainment",
+    "utilities"
+  ],
+  "prefer_related_applications": false
+}
