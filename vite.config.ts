@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => {
   const apiKey = env.GEMINI_API_KEY || null;
 
   return {
+    build: {
+      outDir: 'docs', // GitHub Pages uses /docs folder
+    },
     server: {
       port: 3000,
       host: '0.0.0.0',
