@@ -1,0 +1,8 @@
+{
+  "name": "MTG Announcer",
+  "description": "An AI-powered Magic: The Gathering assistant that watches your game, tracks state, and announces plays like an esports commentator using Gemini Live API.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
