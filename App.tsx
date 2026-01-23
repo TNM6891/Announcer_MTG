@@ -73,13 +73,31 @@ const App: React.FC = () => {
     // Mode Selection Screen
     if (!appMode) {
         return (
-            <div className="h-screen w-screen bg-zinc-950 flex items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] relative overflow-hidden">
+            <div className="h-screen w-screen bg-gradient-mana-enhanced flex items-center justify-center p-6 relative overflow-hidden">
+                {/* Animated Particle Background */}
+                <div className="particle-background">
+                    {[...Array(20)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="particle"
+                            style={{
+                                color: i % 5 === 0 ? 'var(--mana-blue-500)' :
+                                    i % 5 === 1 ? 'var(--mana-black-500)' :
+                                        i % 5 === 2 ? 'var(--mana-red-500)' :
+                                            i % 5 === 3 ? 'var(--mana-green-500)' :
+                                                'var(--mana-white-500)',
+                                bottom: `${Math.random() * 100}%`
+                            }}
+                        />
+                    ))}
+                </div>
+
                 {/* Help Button */}
                 <button
                     onClick={() => setShowHelp(true)}
-                    className="absolute top-6 right-6 w-10 h-10 rounded-full bg-zinc-800 border border-zinc-600 text-zinc-400 hover:text-white hover:border-indigo-500 hover:bg-indigo-600 transition-all flex items-center justify-center shadow-lg z-50"
+                    className="absolute top-6 right-6 w-12 h-12 rounded-full glass-panel text-zinc-400 hover:text-white transition-all flex items-center justify-center shadow-lg z-50 border-2 border-transparent hover:border-purple-500 glow-md"
                 >
-                    <i className="fa-solid fa-question text-lg"></i>
+                    <i className="fa-solid fa-question text-xl"></i>
                 </button>
 
                 <HelpModal
@@ -103,80 +121,95 @@ const App: React.FC = () => {
                     </div>
                 </HelpModal>
 
-                <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                    <div className="md:col-span-2 text-center mb-4">
-                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mx-auto mb-4">
-                            <i className="fa-solid fa-dragon text-white text-3xl"></i>
+                <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    <div className="md:col-span-2 text-center mb-6">
+                        <div className="w-24 h-24 rounded-2xl bg-gradient-black flex items-center justify-center shadow-dramatic mx-auto mb-8 border-3 animate-float glow-lg texture-damasc" style={{ color: 'var(--mana-black-500)', borderWidth: '3px', borderColor: 'var(--mana-black-500)' }}>
+                            <i className="fa-solid fa-dragon text-white text-5xl drop-shadow-lg"></i>
                         </div>
-                        <h1 className="text-4xl font-bold text-white font-serif tracking-tight mb-2">MTG Announcer</h1>
-                        <p className="text-zinc-400">Choose your interface mode</p>
+                        <h1 className="heading-xl text-white mb-4 text-shadow" style={{ textShadow: '0 4px 12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(150, 84, 255, 0.5)' }}>MTG ANNOUNCER</h1>
+                        <p className="text-zinc-200 body-lg font-semibold">Choose your interface mode</p>
                     </div>
 
-                    {/* Announcer Mode Card */}
+                    {/* Announcer Mode Card - Blue Mana Theme */}
                     <button
                         onClick={() => setAppMode(AppMode.Announcer)}
-                        className="group bg-zinc-900 border-2 border-zinc-800 hover:border-indigo-500 rounded-2xl p-8 text-left transition-all hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] flex flex-col relative overflow-hidden"
+                        className="group mtg-card-premium mtg-corner-ornament dramatic-hover relative"
+                        style={{ color: 'var(--mana-blue-500)' }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i className="fa-solid fa-microphone-lines text-4xl text-indigo-400 mb-4 group-hover:scale-110 transition-transform origin-left"></i>
-                        <h2 className="text-2xl font-bold text-white mb-2">Host / Announcer</h2>
-                        <p className="text-zinc-400 text-sm leading-relaxed">
-                            Start a new session as the Host. The AI will watch your camera and any connected player cameras to announce the game.
-                        </p>
+                        <div className="mtg-card-premium-inner p-8 mtg-foil-effect texture-card-linen">
+                            <div className="absolute inset-0 bg-gradient-blue opacity-15 group-hover:opacity-25 transition-opacity rounded-xl"></div>
+                            <div className="mana-symbol-large mana-symbol-blue mb-6 group-hover:scale-110 transition-transform origin-left relative z-10">
+                                U
+                            </div>
+                            <h2 className="heading-sm text-white mb-4 relative z-10" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)' }}>Host / Announcer</h2>
+                            <p className="text-zinc-100 body-md leading-relaxed relative z-10">
+                                Start a new session as the Host. The AI will watch your camera and any connected player cameras to announce the game.
+                            </p>
+                        </div>
                     </button>
 
-                    {/* AR View Mode Card */}
+                    {/* AR View Mode Card - Green Mana Theme */}
                     <button
                         onClick={() => setAppMode(AppMode.ARView)}
-                        className="group bg-zinc-900 border-2 border-zinc-800 hover:border-cyan-500 rounded-2xl p-8 text-left transition-all hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] flex flex-col relative overflow-hidden"
+                        className="group mtg-card-premium mtg-corner-ornament dramatic-hover relative"
+                        style={{ color: 'var(--mana-green-500)' }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i className="fa-solid fa-glasses text-4xl text-cyan-400 mb-4 group-hover:scale-110 transition-transform origin-left"></i>
-                        <h2 className="text-2xl font-bold text-white mb-2">Offline AR View</h2>
-                        <p className="text-zinc-400 text-sm leading-relaxed">
-                            Visual HUD focus. Audio is muted. Use your camera to track board state locally without connecting to a host.
-                        </p>
+                        <div className="mtg-card-premium-inner p-8 mtg-foil-effect texture-card-linen">
+                            <div className="absolute inset-0 bg-gradient-green opacity-15 group-hover:opacity-25 transition-opacity rounded-xl"></div>
+                            <div className="mana-symbol-large mana-symbol-green mb-6 group-hover:scale-110 transition-transform origin-left relative z-10">
+                                G
+                            </div>
+                            <h2 className="heading-sm text-white mb-4 relative z-10" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)' }}>Offline AR View</h2>
+                            <p className="text-zinc-100 body-md leading-relaxed relative z-10">
+                                Visual HUD focus. Audio is muted. Use your camera to track board state locally without connecting to a host.
+                            </p>
+                        </div>
                     </button>
 
-                    {/* Join Game Card */}
-                    <div className={`md:col-span-2 group bg-zinc-900 border-2 border-zinc-800 ${showJoinInput ? 'border-green-500' : 'hover:border-green-500'} rounded-2xl p-8 text-left transition-all hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] flex flex-col relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                    {/* Join Game Card - Red Mana Theme */}
+                    <div className={`md:col-span-2 group mtg-card-premium ${showJoinInput ? 'mtg-corner-ornament' : ''} relative`} style={{ color: 'var(--mana-red-500)' }}>
+                        <div className="mtg-card-premium-inner p-8 mtg-foil-effect texture-card-linen">
+                            <div className="absolute inset-0 bg-gradient-red opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none rounded-xl"></div>
 
-                        {!showJoinInput ? (
-                            <button onClick={() => setShowJoinInput(true)} className="w-full text-left flex items-start gap-4">
-                                <i className="fa-solid fa-users-viewfinder text-4xl text-green-400 mb-4 group-hover:scale-110 transition-transform origin-left"></i>
-                                <div>
-                                    <h2 className="text-2xl font-bold text-white mb-2">Join Game</h2>
-                                    <p className="text-zinc-400 text-sm leading-relaxed">
-                                        Connect to a nearby Host via Room ID. Your camera will be sent to the Announcer, and you will see the game state overlay.
-                                    </p>
+                            {!showJoinInput ? (
+                                <button onClick={() => setShowJoinInput(true)} className="w-full text-left flex items-start gap-6">
+                                    <div className="mana-symbol-large mana-symbol-red text-2xl mb-4 group-hover:scale-110 transition-transform origin-left flex-shrink-0">
+                                        R
+                                    </div>
+                                    <div className="relative z-10">
+                                        <h2 className="heading-sm text-white mb-4" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)' }}>Join Game</h2>
+                                        <p className="text-zinc-100 body-md leading-relaxed">
+                                            Connect to a nearby Host via Room ID. Your camera will be sent to the Announcer, and you will see the game state overlay.
+                                        </p>
+                                    </div>
+                                </button>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center animate-fade-in w-full relative z-10">
+                                    <h3 className="heading-sm text-white mb-8">Enter Room ID</h3>
+                                    <div className="flex gap-2 max-w-md w-full">
+                                        <span className="glass-panel text-zinc-200 px-5 py-4 rounded-l-xl font-mono font-bold text-lg border-2 border-red-900/50">mtg-</span>
+                                        <input
+                                            type="text"
+                                            value={roomIdInput}
+                                            onChange={(e) => setRoomIdInput(e.target.value)}
+                                            placeholder="1234"
+                                            className="flex-1 glass-panel border-l-0 rounded-r-xl px-5 py-4 text-white placeholder-zinc-400 focus:outline-none focus:ring-3 focus:ring-red-500 font-mono tracking-widest text-xl border-2 border-red-900/50 focus:border-red-500"
+                                        />
+                                    </div>
+                                    <div className="flex gap-6 mt-10">
+                                        <button onClick={() => setShowJoinInput(false)} className="text-zinc-300 hover:text-white transition-colors px-8 py-3 font-semibold text-lg">Cancel</button>
+                                        <button
+                                            onClick={handleJoinGame}
+                                            disabled={!roomIdInput.trim()}
+                                            className="btn-premium btn-red px-10 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            style={{ color: 'var(--mana-red-500)' }}
+                                        >
+                                            <i className="fa-solid fa-bolt mr-2"></i> Connect
+                                        </button>
+                                    </div>
                                 </div>
-                            </button>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center animate-fadeIn w-full relative z-10">
-                                <h3 className="text-xl font-bold text-white mb-4">Enter Room ID</h3>
-                                <div className="flex gap-2 max-w-md w-full">
-                                    <span className="bg-zinc-800 border border-zinc-700 text-zinc-400 px-3 py-2 rounded-l-lg font-mono">mtg-</span>
-                                    <input
-                                        type="text"
-                                        value={roomIdInput}
-                                        onChange={(e) => setRoomIdInput(e.target.value)}
-                                        placeholder="1234"
-                                        className="flex-1 bg-zinc-950 border border-zinc-700 border-l-0 rounded-r-lg px-4 py-2 text-white focus:outline-none focus:border-green-500 font-mono tracking-widest text-lg"
-                                    />
-                                </div>
-                                <div className="flex gap-4 mt-6">
-                                    <button onClick={() => setShowJoinInput(false)} className="text-zinc-500 hover:text-white transition-colors">Cancel</button>
-                                    <button
-                                        onClick={handleJoinGame}
-                                        disabled={!roomIdInput.trim()}
-                                        className="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-lg font-bold uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-900/50"
-                                    >
-                                        Connect
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -187,46 +220,61 @@ const App: React.FC = () => {
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-zinc-950 text-white font-sans selection:bg-indigo-500 selection:text-white">
             {/* Sidebar Navigation */}
-            <nav className="w-16 md:w-20 flex flex-col items-center py-6 bg-zinc-900 border-r border-zinc-800 z-50">
-                <div className="mb-8 w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    <i className="fa-solid fa-dragon text-white text-lg"></i>
+            <nav className="w-16 md:w-20 flex flex-col items-center py-6 glass-panel border-r-2 border-purple-900/50 z-50">
+                <div className="mb-8 w-12 h-12 rounded-xl bg-gradient-black flex items-center justify-center shadow-lg border-2 border-purple-500/50 animate-pulse-glow" style={{ color: 'var(--mana-black-400)' }}>
+                    <i className="fa-solid fa-dragon text-white text-xl"></i>
                 </div>
 
                 <div className="flex-1 flex flex-col gap-4 w-full px-2">
                     <button
                         onClick={() => setActiveTab(Tab.ANNOUNCER)}
-                        className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 group relative ${activeTab === Tab.ANNOUNCER ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'text-zinc-500 hover:bg-zinc-800 hover:text-indigo-400'}`}
+                        className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 group relative border-2 ${activeTab === Tab.ANNOUNCER
+                            ? 'bg-gradient-blue text-white shadow-lg border-blue-500'
+                            : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-blue-400 border-transparent hover:border-blue-500/30'
+                            }`}
                         title="Announcer"
                     >
                         <i className="fa-solid fa-microphone-lines text-xl"></i>
-                        {activeTab === Tab.ANNOUNCER && <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white/20 rounded-l-full"></div>}
+                        {activeTab === Tab.ANNOUNCER && <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-400 rounded-l-full shadow-lg shadow-blue-500"></div>}
                     </button>
 
                     <button
                         onClick={() => setActiveTab(Tab.TOKENS)}
-                        className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 group ${activeTab === Tab.TOKENS ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'text-zinc-500 hover:bg-zinc-800 hover:text-indigo-400'}`}
+                        className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 group border-2 ${activeTab === Tab.TOKENS
+                            ? 'bg-gradient-green text-white shadow-lg border-green-500'
+                            : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-green-400 border-transparent hover:border-green-500/30'
+                            }`}
                         title="Token Forge"
                     >
                         <i className="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                        {activeTab === Tab.TOKENS && <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-green-400 rounded-l-full shadow-lg shadow-green-500"></div>}
                     </button>
 
                     <button
                         onClick={() => setActiveTab(Tab.SETTINGS)}
-                        className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 group ${activeTab === Tab.SETTINGS ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'text-zinc-500 hover:bg-zinc-800 hover:text-indigo-400'}`}
+                        className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 group border-2 ${activeTab === Tab.SETTINGS
+                            ? 'bg-gradient-artifact text-white shadow-lg border-gray-400'
+                            : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-gray-400 border-transparent hover:border-gray-500/30'
+                            }`}
                         title="Settings"
                     >
                         <i className="fa-solid fa-gear text-xl"></i>
+                        {activeTab === Tab.SETTINGS && <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gray-400 rounded-l-full shadow-lg shadow-gray-500"></div>}
                     </button>
                 </div>
 
                 <div className="mt-auto flex flex-col items-center gap-4">
                     {/* Sync Status Indicator */}
-                    <div className={`w-2 h-2 rounded-full ${dbReady ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`} title={dbReady ? "Database Ready" : "Syncing..."}></div>
+                    <div
+                        className={`mana-orb w-3 h-3 ${dbReady ? 'bg-green-500' : 'bg-yellow-500'}`}
+                        style={{ color: dbReady ? 'var(--mana-green-500)' : 'var(--mana-white-500)' }}
+                        title={dbReady ? "Database Ready" : "Syncing..."}
+                    ></div>
 
                     {/* Return to Mode Selection */}
                     <button
                         onClick={() => setAppMode(null)}
-                        className="w-10 h-10 rounded-full bg-zinc-800 text-zinc-400 hover:text-white hover:bg-red-900 hover:border-red-500 border border-transparent transition-all flex items-center justify-center"
+                        className="w-10 h-10 rounded-full glass-panel text-zinc-400 hover:text-white hover:border-red-500 border-2 border-transparent transition-all flex items-center justify-center"
                         title="Exit to Menu"
                     >
                         <i className="fa-solid fa-power-off"></i>
@@ -235,10 +283,10 @@ const App: React.FC = () => {
             </nav>
 
             {/* Main Content Area */}
-            <main className="flex-1 relative overflow-hidden bg-zinc-950">
+            <main className="flex-1 relative overflow-hidden card-texture" style={{ background: 'var(--bg-primary)' }}>
                 {/* Syncing Overlay */}
                 {isSyncing && (
-                    <div className="absolute top-0 left-0 right-0 z-50 bg-indigo-600/90 text-white text-xs font-bold px-4 py-2 flex justify-between items-center shadow-lg backdrop-blur-sm">
+                    <div className="absolute top-0 left-0 right-0 z-50 glass-panel text-white text-xs font-bold px-4 py-3 flex justify-between items-center shadow-lg border-b-2 border-purple-500 animate-shimmer">
                         <span className="flex items-center gap-2">
                             <i className="fa-solid fa-rotate fa-spin"></i>
                             {syncStatus || "Synchronizing Oracle Database..."}
