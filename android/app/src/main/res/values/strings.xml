@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MTG Announcer</string>
+    <string name="title_activity_main">MTG Announcer</string>
+    <string name="package_name">com.antistasis.mtgannouncer</string>
+    <string name="custom_url_scheme">com.antistasis.mtgannouncer</string>
+</resources>

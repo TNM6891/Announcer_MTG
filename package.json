@@ -1,23 +1,73 @@
 {
   "name": "mtg-announcer",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "AI-powered Magic: The Gathering game announcer and tracker",
+  "author": "Antistasis",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "build:electron": "cross-env ELECTRON_BUILD=true vite build",
+    "preview": "vite preview",
+    "electron:dev": "npm run build:electron && electron .",
+    "electron:build": "npm run build:electron && electron-builder",
+    "build:win": "npm run build:electron && electron-builder --win",
+    "build:linux": "npm run build:electron && electron-builder --linux",
+    "build:all": "npm run build:electron && electron-builder --win --linux",
+    "cap:sync": "npx cap sync",
+    "android:open": "npx cap open android",
+    "android:build": "npm run build && npx cap sync android"
+  },
+  "build": {
+    "appId": "com.antistasis.mtgannouncer",
+    "productName": "MTG Announcer",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "docs/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "electron/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "electron/icon.png",
+      "category": "Game"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "dependencies": {
-    "react": "^19.2.3",
+    "@capacitor/android": "^8.0.1",
+    "@capacitor/camera": "^8.0.0",
+    "@capacitor/cli": "^8.0.1",
+    "@capacitor/core": "^8.0.1",
+    "@capacitor/filesystem": "^8.1.0",
+    "@capacitor/network": "^8.0.0",
     "@google/genai": "^1.37.0",
-    "react-dom": "^19.2.3",
     "dexie": "^3.2.4",
-    "peerjs": "1.5.2"
+    "peerjs": "1.5.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "cross-env": "^10.1.0",
+    "electron": "^40.0.0",
+    "electron-builder": "^26.4.0",
+    "electron-squirrel-startup": "^1.0.1",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

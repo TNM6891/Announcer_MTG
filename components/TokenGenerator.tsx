@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { db, UserToken } from '../database';
 import { HelpModal } from './HelpModal';
+import { useToast } from '../hooks/useToast';
 
 interface GeneratedToken {
     url: string;
@@ -33,6 +34,8 @@ const COLOR_KEYWORDS: Record<string, string[]> = {
 };
 
 export const TokenGenerator: React.FC = () => {
+    const { showToast } = useToast();
+
     // Form inputs
     const [prompt, setPrompt] = useState('');
     const [tokenName, setTokenName] = useState('');
@@ -44,10 +47,15 @@ export const TokenGenerator: React.FC = () => {
     const [savedTokens, setSavedTokens] = useState<UserToken[]>([]);
     const [showHelp, setShowHelp] = useState(false);
 
+    // Get API key from localStorage (set in Settings)
+    const getApiKey = useCallback((): string | null => {
+        return localStorage.getItem('gemini_api_key');
+    }, []);
+
     // Load saved tokens on mount
     const loadSavedTokens = useCallback(async () => {
         const tokens = await db.userTokens.toArray();
-        setSavedTokens([...tokens].reverse()); // Fixed: Use spread operator instead of mutating
+        setSavedTokens([...tokens].reverse());
     }, []);
 
     useEffect(() => {
@@ -64,11 +72,22 @@ export const TokenGenerator: React.FC = () => {
 
     // Generate token image
     const handleGenerate = useCallback(async () => {
-        if (!prompt || !process.env.API_KEY) return;
+        const apiKey = getApiKey();
+
+        if (!prompt) {
+            showToast('Please enter a prompt description', 'error');
+            return;
+        }
+
+        if (!apiKey) {
+            showToast('API key required. Set it in Settings.', 'error');
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const ai = new GoogleGenAI({ apiKey });
 
             const response = await ai.models.generateContent({
                 model: 'gemini-3-pro-image-preview',
@@ -96,14 +115,17 @@ export const TokenGenerator: React.FC = () => {
                     stats: tokenStats || ""
                 };
                 setGeneratedTokens(prev => [newToken, ...prev]);
+                showToast('Token forged successfully!', 'success');
+            } else {
+                showToast('No image generated. Try a different prompt.', 'error');
             }
         } catch (error) {
             console.error("Token gen failed", error);
-            alert("Failed to generate token. Check API key or quota.");
+            showToast('Failed to generate. Check API key or quota.', 'error');
         } finally {
             setLoading(false);
         }
-    }, [prompt, tokenName, tokenStats]);
+    }, [prompt, tokenName, tokenStats, getApiKey, showToast]);
 
     // Save token to database
     const handleSave = useCallback(async (token: GeneratedToken) => {
@@ -117,18 +139,20 @@ export const TokenGenerator: React.FC = () => {
                 created_at: new Date()
             });
             await loadSavedTokens();
+            showToast(`${token.name} saved to library`, 'success');
         } catch (e) {
             console.error("Failed to save token", e);
-            alert("Could not save token to database.");
+            showToast('Failed to save token', 'error');
         }
-    }, [inferColors, loadSavedTokens]);
+    }, [inferColors, loadSavedTokens, showToast]);
 
     // Delete token from database
-    const handleDelete = useCallback(async (id?: number) => {
+    const handleDelete = useCallback(async (id?: number, name?: string) => {
         if (!id) return;
         await db.userTokens.delete(id);
         await loadSavedTokens();
-    }, [loadSavedTokens]);
+        showToast(`${name || 'Token'} removed`, 'info');
+    }, [loadSavedTokens, showToast]);
 
     // Memoized component for mana color badges
     const ManaColorBadges = useMemo(() => {
@@ -150,8 +174,11 @@ export const TokenGenerator: React.FC = () => {
         return ColorBadge;
     }, []);
 
+    // Check if API key exists
+    const hasApiKey = !!getApiKey();
+
     return (
-        <div className="h-full flex flex-col p-6 max-w-6xl mx-auto relative">
+        <div className="h-full flex flex-col p-4 md:p-6 max-w-6xl mx-auto relative scroll-container safe-area-padding">
             {/* Help Modal */}
             <HelpModal
                 isOpen={showHelp}
@@ -176,10 +203,10 @@ export const TokenGenerator: React.FC = () => {
                 </div>
             </HelpModal>
 
-            {/* Help Button */}
+            {/* Help Button - Consistent position */}
             <button
                 onClick={() => setShowHelp(true)}
-                className="absolute top-6 right-6 w-10 h-10 rounded-full glass-panel text-zinc-400 hover:text-white border-2 border-transparent hover:border-green-500 transition-all flex items-center justify-center shadow-lg z-10"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full glass-panel text-zinc-400 hover:text-white border-2 border-transparent hover:border-green-500 transition-all flex items-center justify-center shadow-lg z-10 touch-target"
                 title="Help"
                 aria-label="Open help modal"
             >
@@ -187,23 +214,31 @@ export const TokenGenerator: React.FC = () => {
             </button>
 
             {/* Header */}
-            <header className="text-center mb-8">
-                <div className="flex items-center justify-center gap-6 mb-6">
-                    <div className="mana-symbol-large mana-symbol-green animate-pulse-glow">G</div>
+            <header className="text-center mb-6 md:mb-8">
+                <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
+                    <div className="mana-symbol-large mana-symbol-green animate-pulse-glow hidden md:flex">G</div>
                     <h2 className="heading-lg text-white text-shadow-green">TOKEN FORGE</h2>
-                    <div className="mana-symbol-large mana-symbol-green animate-pulse-glow">G</div>
+                    <div className="mana-symbol-large mana-symbol-green animate-pulse-glow hidden md:flex">G</div>
                 </div>
-                <p className="text-zinc-200 body-lg font-semibold">
-                    Create custom tokens for your battlefield using Gemini 3 Pro.
+                <p className="text-zinc-200 body-md md:body-lg font-semibold">
+                    Create custom tokens using Gemini AI.
                 </p>
             </header>
 
+            {/* API Key Warning */}
+            {!hasApiKey && (
+                <div className="mb-4 p-3 rounded-lg bg-red-950/50 border border-red-800 text-red-200 text-sm flex items-center gap-3 banner-auto-dismiss">
+                    <i className="fa-solid fa-triangle-exclamation text-red-400" />
+                    <span>No API key configured. Go to <strong>Settings</strong> to add your Gemini API key.</span>
+                </div>
+            )}
+
             {/* Creation Controls */}
-            <div className="mtg-card-premium mtg-corner-ornament mb-10 color-green">
-                <div className="mtg-card-premium-inner p-8 texture-card-linen relative">
+            <div className="mtg-card-premium mtg-corner-ornament mb-6 md:mb-10 color-green">
+                <div className="mtg-card-premium-inner p-4 md:p-8 texture-card-premium relative">
                     <div className="absolute inset-0 bg-gradient-green opacity-10 pointer-events-none rounded-xl" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6 relative z-10">
                         {/* Prompt Input */}
                         <div className="md:col-span-2">
                             <label
@@ -265,8 +300,8 @@ export const TokenGenerator: React.FC = () => {
                     {/* Generate Button */}
                     <button
                         onClick={handleGenerate}
-                        disabled={loading || !prompt}
-                        className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all uppercase tracking-widest text-lg btn-mtg ${loading ? 'btn-disabled' : 'btn-green'
+                        disabled={loading || !prompt || !hasApiKey}
+                        className={`w-full py-3 md:py-4 rounded-xl font-bold text-white shadow-lg transition-all uppercase tracking-widest text-base md:text-lg btn-mtg touch-target ${loading || !hasApiKey ? 'btn-disabled' : 'btn-green'
                             }`}
                         aria-busy={loading ? "true" : undefined}
                     >
@@ -286,7 +321,23 @@ export const TokenGenerator: React.FC = () => {
             </div>
 
             {/* Main Content: Token Display */}
-            <main className="flex-1 overflow-y-auto pr-2 space-y-8">
+            <main className="flex-1 overflow-y-auto pr-2 space-y-6 md:space-y-8 scroll-container">
+                {/* Skeleton Loading State */}
+                {loading && generatedTokens.length === 0 && (
+                    <section aria-label="Loading">
+                        <h3 className="text-green-400 font-bold uppercase tracking-widest text-sm mb-4 border-b border-green-900/50 pb-2 flex items-center gap-2">
+                            <i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />
+                            Forging...
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+                            <div className="p-3 rounded-xl border-2 border-green-900/50">
+                                <div className="skeleton skeleton-card mb-3"></div>
+                                <div className="skeleton skeleton-text-short"></div>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {/* Freshly Generated Section */}
                 {generatedTokens.length > 0 && (
                     <section aria-labelledby="generated-heading">
@@ -297,15 +348,15 @@ export const TokenGenerator: React.FC = () => {
                             <i className="fa-solid fa-sparkles" aria-hidden="true" />
                             Fresh from the Forge
                         </h3>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                             {generatedTokens.map((token, idx) => {
                                 const colors = inferColors(token.prompt + " " + token.name);
                                 return (
                                     <article
                                         key={`generated-${idx}-${token.name}`}
-                                        className="mtg-card-frame mtg-card-frame-green p-3 hover:scale-105 transition-transform group"
+                                        className="mtg-card-frame mtg-card-frame-green p-2 md:p-3 hover:scale-105 transition-transform group"
                                     >
-                                        <div className="aspect-[3/4] rounded-lg overflow-hidden relative mb-3 border-2 border-black shadow-xl">
+                                        <div className="aspect-[3/4] rounded-lg overflow-hidden relative mb-2 md:mb-3 border-2 border-black shadow-xl">
                                             <img
                                                 src={token.url}
                                                 alt={`Generated token: ${token.name}`}
@@ -313,14 +364,14 @@ export const TokenGenerator: React.FC = () => {
                                                 loading="lazy"
                                             />
                                             {token.stats && (
-                                                <div className="absolute bottom-2 right-2 glass-panel text-white px-2 py-1 rounded border-2 border-green-600 font-bold font-mono text-xs shadow-lg">
+                                                <div className="absolute bottom-1 md:bottom-2 right-1 md:right-2 glass-panel text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded border-2 border-green-600 font-bold font-mono text-[10px] md:text-xs shadow-lg">
                                                     {token.stats}
                                                 </div>
                                             )}
                                         </div>
                                         <div className="flex justify-between items-start mb-2">
                                             <div className="flex-1">
-                                                <p className="text-white font-bold text-sm truncate font-serif">
+                                                <p className="text-white font-bold text-xs md:text-sm truncate font-serif">
                                                     {token.name}
                                                 </p>
                                                 <ManaColorBadges colors={colors} />
@@ -328,7 +379,7 @@ export const TokenGenerator: React.FC = () => {
                                         </div>
                                         <button
                                             onClick={() => handleSave(token)}
-                                            className="w-full py-2 glass-panel hover:bg-green-700 text-zinc-300 hover:text-white rounded text-xs font-bold uppercase transition-all border-2 border-transparent hover:border-green-500"
+                                            className="w-full py-2 glass-panel hover:bg-green-700 text-zinc-300 hover:text-white rounded text-xs font-bold uppercase transition-all border-2 border-transparent hover:border-green-500 touch-target"
                                             aria-label={`Save ${token.name} token`}
                                         >
                                             <i className="fa-solid fa-floppy-disk mr-1" aria-hidden="true" />
@@ -354,12 +405,12 @@ export const TokenGenerator: React.FC = () => {
                     </div>
 
                     {savedTokens.length === 0 ? (
-                        <div className="h-32 flex flex-col items-center justify-center text-zinc-600 border-2 border-dashed border-zinc-800 rounded-xl glass-panel">
-                            <i className="fa-regular fa-clone text-3xl mb-2" aria-hidden="true" />
-                            <p>No tokens saved yet.</p>
+                        <div className="empty-state border-2 border-dashed border-zinc-800 rounded-xl glass-panel">
+                            <i className="fa-regular fa-clone empty-state-icon" aria-hidden="true" />
+                            <p className="empty-state-text">No tokens saved yet. Generate and save some!</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
                             {savedTokens.map((token) => (
                                 <article
                                     key={`saved-${token.id}`}
@@ -380,12 +431,12 @@ export const TokenGenerator: React.FC = () => {
                                         {/* Hover Actions */}
                                         <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
                                             <button
-                                                onClick={() => handleDelete(token.id)}
-                                                className="w-8 h-8 rounded-full bg-red-900/90 text-red-200 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border-2 border-red-500"
+                                                onClick={() => handleDelete(token.id, token.name)}
+                                                className="w-10 h-10 rounded-full bg-red-900/90 text-red-200 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border-2 border-red-500 touch-target"
                                                 title="Delete token"
                                                 aria-label={`Delete ${token.name} token`}
                                             >
-                                                <i className="fa-solid fa-trash text-xs" aria-hidden="true" />
+                                                <i className="fa-solid fa-trash text-sm" aria-hidden="true" />
                                             </button>
                                         </div>
                                     </div>

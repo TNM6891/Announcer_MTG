@@ -1433,3 +1433,574 @@ body {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
 }
+
+/* ============================================
+   LOCAL TEXTURE PATTERNS (No External URLs)
+   ============================================ */
+
+/* Dark Matter Pattern - Pure CSS */
+.texture-dark-matter {
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+}
+
+/* Carbon Fiber Pattern - Pure CSS */
+.texture-carbon-fiber {
+  background-color: var(--bg-secondary);
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%);
+  background-size: 4px 4px;
+}
+
+/* Premium Card Texture */
+.texture-card-premium {
+  background-color: var(--bg-secondary);
+  background-image:
+    repeating-linear-gradient(90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.01) 2px,
+      rgba(255, 255, 255, 0.01) 4px),
+    repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.01) 2px,
+      rgba(255, 255, 255, 0.01) 4px);
+}
+
+/* Noise Overlay */
+.texture-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   TOAST NOTIFICATION SYSTEM
+   ============================================ */
+
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1.25rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  animation: toast-in 0.3s ease-out, toast-out 0.3s ease-in 2.7s forwards;
+  pointer-events: auto;
+  max-width: 90vw;
+}
+
+.toast-success {
+  border-color: var(--mana-green-500);
+  background: linear-gradient(135deg, rgba(0, 153, 0, 0.2), rgba(24, 24, 27, 0.95));
+}
+
+.toast-success i {
+  color: var(--mana-green-400);
+}
+
+.toast-error {
+  border-color: var(--mana-red-500);
+  background: linear-gradient(135deg, rgba(204, 0, 0, 0.2), rgba(24, 24, 27, 0.95));
+}
+
+.toast-error i {
+  color: var(--mana-red-400);
+}
+
+.toast-info {
+  border-color: var(--mana-blue-500);
+  background: linear-gradient(135deg, rgba(0, 119, 255, 0.2), rgba(24, 24, 27, 0.95));
+}
+
+.toast-info i {
+  color: var(--mana-blue-400);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY - FOCUS STATES
+   ============================================ */
+
+/* Universal focus ring */
+:focus-visible {
+  outline: 2px solid var(--mana-blue-500);
+  outline-offset: 2px;
+}
+
+/* Custom focus for buttons */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--mana-blue-400);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, 0.2);
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--mana-blue-600);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  z-index: 10000;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ============================================
+   ENHANCED MOBILE RESPONSIVE
+   ============================================ */
+
+/* Safe area for notched phones */
+.safe-area-padding {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Touch-friendly button sizes */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile scroll container */
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Landscape specific */
+@media (orientation: landscape) and (max-height: 500px) {
+  .heading-xl {
+    font-size: 1.75rem;
+  }
+
+  .heading-lg {
+    font-size: 1.5rem;
+  }
+
+  .landscape-compact {
+    padding: 0.5rem !important;
+  }
+
+  .landscape-hidden {
+    display: none !important;
+  }
+}
+
+/* Small devices */
+@media (max-width: 480px) {
+  .heading-xl {
+    font-size: 1.75rem;
+  }
+
+  .heading-lg {
+    font-size: 1.5rem;
+  }
+
+  .heading-md {
+    font-size: 1.25rem;
+  }
+
+  .heading-sm {
+    font-size: 1.125rem;
+  }
+
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+
+  .mobile-full {
+    width: 100% !important;
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-small-text {
+    font-size: 0.75rem !important;
+  }
+
+  .mobile-padding {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Tablet */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .tablet-stack {
+    flex-direction: column !important;
+  }
+
+  .tablet-2col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .particle {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   LIFE TOTAL COLOR CODING
+   ============================================ */
+
+.life-healthy {
+  color: var(--mana-green-400);
+}
+
+.life-warning {
+  color: var(--mana-white-400);
+}
+
+.life-danger {
+  color: var(--mana-red-400);
+  animation: pulse-danger 1s ease-in-out infinite;
+}
+
+@keyframes pulse-danger {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ============================================
+   LOADING & SKELETON STATES
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-card {
+  aspect-ratio: 3/4;
+}
+
+.skeleton-text {
+  height: 1em;
+  width: 100%;
+}
+
+.skeleton-text-short {
+  height: 1em;
+  width: 60%;
+}
+
+/* ============================================
+   EMPTY STATES
+   ============================================ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-tertiary);
+  min-height: 150px;
+}
+
+.empty-state-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-style: italic;
+  font-family: var(--font-serif);
+}
+
+/* ============================================
+   MANA SYMBOL SVG ICONS
+   ============================================ */
+
+.mana-svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.mana-svg-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+}
+
+.mana-svg-sm {
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.5rem;
+}
+
+/* ============================================
+   DROPDOWN CLICK OUTSIDE SUPPORT
+   ============================================ */
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: transparent;
+}
+
+.dropdown-menu {
+  z-index: 25;
+}
+
+/* ============================================
+   BANNER AUTO-DISMISS
+   ============================================ */
+
+.banner-auto-dismiss {
+  animation: banner-fade-out 0.5s ease-out 3s forwards;
+}
+
+@keyframes banner-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+}
+
+/* ============================================
+   SETTINGS SPECIFIC STYLES
+   ============================================ */
+
+.settings-section {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.settings-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--mana-blue-400);
+  margin-bottom: 0.5rem;
+}
+
+.settings-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  background: var(--bg-tertiary);
+  border-radius: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+}
+
+.toggle-switch.active {
+  background: var(--mana-green-600);
+  border-color: var(--mana-green-500);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(22px);
+}
+
+/* Range Slider */
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  outline: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--mana-blue-500);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.range-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--mana-blue-500);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+/* Select Dropdown */
+.select-mtg {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-tertiary);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: white;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.select-mtg:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.select-mtg:focus {
+  border-color: var(--mana-blue-500);
+  outline: none;
+}
+
+/* Danger Zone */
+.danger-zone {
+  border-color: var(--mana-red-800);
+  background: rgba(102, 0, 0, 0.1);
+}
+
+.btn-danger {
+  background: var(--mana-red-700);
+  border: 2px solid var(--mana-red-500);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-danger:hover {
+  background: var(--mana-red-600);
+}

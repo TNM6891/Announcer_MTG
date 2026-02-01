@@ -4,13 +4,16 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
-  // Make API key optional - app can run without AI features
   const apiKey = env.GEMINI_API_KEY || null;
 
+  // Use relative paths for Electron, absolute for web
+  const isElectron = process.env.ELECTRON_BUILD === 'true';
+  const base = isElectron ? './' : '/Announcer_MTG/';
+
   return {
-    base: '/Announcer_MTG/', // GitHub Pages subdirectory
+    base,
     build: {
-      outDir: 'docs', // GitHub Pages uses /docs folder
+      outDir: 'docs',
     },
     server: {
       port: 3000,
@@ -18,7 +21,6 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react()],
     define: {
-      // API key will be checked at runtime from localStorage or can be set at build time
       'process.env.API_KEY': JSON.stringify(apiKey),
       'process.env.GEMINI_API_KEY': JSON.stringify(apiKey)
     },
